@@ -1,0 +1,173 @@
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #e9edef;
+    }
+
+    .container {
+      background: #111b21;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border: 1px solid #2a3942;
+      max-width: 400px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo::before {
+      content: "💬";
+      font-size: 48px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #00a884;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 400;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 20px;
+      background: #2a3942;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      color: #e9edef;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #00a884;
+      background: #1f2937;
+      box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.1);
+    }
+
+    input[type="text"]::placeholder {
+      color: #8696a0;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #00a884 0%, #008069 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #008069 0%, #006b5a 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 168, 132, 0.3);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .register-link {
+      text-align: center;
+    }
+
+    .register-link a {
+      color: #00a884;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .register-link a:hover {
+      color: #00d3a8;
+      text-decoration: underline;
+    }
+
+    .register-link a::before {
+      content: "👤 ";
+      margin-right: 5px;
+    }
+
+    /* Animation pour les inputs */
+    .form-group {
+      animation: slideInUp 0.6s ease;
+      animation-fill-mode: both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .submit-btn { animation-delay: 0.4s; }
+    .register-link { animation-delay: 0.5s; }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      input[type="text"], .submit-btn {
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+    }
+
+    /* Effet de pulse sur le bouton */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 168, 132, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 168, 132, 0); }
+    }
+
+    .submit-btn:focus {
+      animation: pulse 1.5s infinite;
+    }

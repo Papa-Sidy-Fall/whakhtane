@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="module" src="/src/main.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script type="module" src="deconnexion.js" defer></script>
+  </head>
+  <body>
+      <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <h2>
+                        <span class="new-chat">💬</span>
+                        Discussions <button class="deconnecter" id="btn-deconnexion">Se deconnecter</button>
+                    </h2>
+                    <div class="header-icons">
+                        <span class="header-icon">💬</span>
+                        <span class="header-icon">⋮</span>
+                    </div>
+                </div>
+                
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Rechercher">
+                </div>
+                
+                <div class="filter-tabs">
+                    <span class="filter-tab active">Toutes</span>
+                    <span class="filter-tab">Non lues</span>
+                    <span class="filter-tab">Favoris</span>
+                    <span class="filter-tab">Groupes</span>
+                </div>
+            </div>
+            
+            <div class="chat-list">
+                <div class="chat-item">
+                    <div class="chat-avatar promo-2025">🎉</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Promo 2025 ECSA</span>
+                            <span class="chat-time">samedi</span>
+                        </div>
+                        <div class="chat-message">
+                            Vous avez réagi par ⚠️ à : "Salam Mangui baal..."
+                            <span class="pinned">📌</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar p7-dev">👥</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">P7 dev web</span>
+                            <span class="chat-time">mercredi</span>
+                        </div>
+                        <div class="chat-message">
+                            Ousseynou Manager ODC: Mane aussi 😊 Salam
+                            <span class="pinned">📌</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar dev-mobile">📱</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Dev web mobile ODC App seul</span>
+                            <span class="chat-time">08:09</span>
+                        </div>
+                        <div class="chat-message">
+                            ~ : Happy birthday thiatee que du bonheur ❤️💖
+                            <span class="unread-count">21</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar aleyaa">👤</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Aleyaa ODC 😷💻</span>
+                            <span class="chat-time">07:54</span>
+                        </div>
+                        <div class="chat-message">
+                            ~ MIB: Sans oublier que c'est excellent en code ...
+                            <span class="unread-count">6</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar ag-football">⚽</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">AG eFOOTBALL STORE 🔥 🔥🔥</span>
+                            <span class="chat-time">07:52</span>
+                        </div>
+                        <div class="chat-message">
+                            ~ Jillet💛 a ajouté ~ Gsv
+                            <span class="unread-count">84</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar undisputed">🏆</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Undisputed eFootball Account...</span>
+                            <span class="chat-time">07:40</span>
+                        </div>
+                        <div class="chat-message">
+                            +254 796 318075 a rejoint le groupe via un lien ...
+                            <span class="unread-count">72</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar khadith">🌹</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Khadith🌹 Du 🌹jour❤️ ~💒</span>
+                            <span class="chat-time">06:31</span>
+                        </div>
+                        <div class="chat-message">
+                            ~ Tarec: L'histoire de la promesse tenue ❤️💛 ...
+                            <span class="unread-count">597</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar ousmane">👤</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">Ousmane</span>
+                            <span class="chat-time">06:15</span>
+                        </div>
+                        <div class="chat-message">
+                            📷 Photo
+                            <span class="unread-count">6</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-item">
+                    <div class="chat-avatar master-dev">💻</div>
+                    <div class="chat-info">
+                        <div class="chat-header">
+                            <span class="chat-name">MASTER DEV WEB &lt;/&gt; FULL STAC</span>
+                            <span class="chat-time">00:26</span>
+                        </div>
+                        <div class="chat-message">
+                            Document
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="cloud1"></div>
+            <div class="cloud2"></div>
+            
+            <div class="welcome-screen">
+                <div class="devices-illustration">
+                    <div class="device">
+                        <div class="phone">
+                            <div class="signal">
+                                <div class="signal-bar"></div>
+                                <div class="signal-bar"></div>
+                                <div class="signal-bar"></div>
+                                <div class="signal-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device">
+                        <div class="laptop">
+                            <div class="checkmark">✓</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="welcome-title">WhatsApp Web</h1>
+                <p class="welcome-text">
+                    Envoyez et recevez des messages sans avoir à garder votre téléphone connecté.<br>
+                    Utilisez WhatsApp sur un maximum de 4 appareils et 1 téléphone, simultanément.
+                </p>
+            </div>
+            
+            <div class="encryption-notice">
+                <span class="lock-icon">🔒</span>
+                Vos messages personnels sont chiffrés de bout en bout
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

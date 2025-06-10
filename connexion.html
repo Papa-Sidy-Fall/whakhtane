@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inscription - WhatsApp Style</title>
-  <link rel="stylesheet" href="styleinscription.css">
+  <title>Connexion - WhatsApp Style</title>
+  <link rel="stylesheet" href="styleconnection.css">
+  <script src="connexion.js" defer></script>
 </head>
 <body>
   <div class="container">
     <div class="logo"></div>
-    <h2>Inscription</h2>
-    <div class="welcome-text">Rejoignez notre communauté</div>
-    <form id="form-inscription">
+    <h2>Connexion</h2>
+    <form id="form-connexion">
       <div class="form-group">
         <input type="text" placeholder="Prénom" id="prenom" required>
       </div>
@@ -21,15 +21,13 @@
       <div class="form-group">
         <input type="text" placeholder="Téléphone" id="telephone" required>
       </div>
-      <button type="submit" class="submit-btn">
-        <span>S'inscrire</span>
-      </button>
-      <div class="login-link">
-        <a href="connexion.html">Se connecter</a>
+      <button type="submit" class="submit-btn">Se connecter</button>
+      <div class="register-link">
+        <a href="index.html">Inscrivez-vous</a>
       </div>
     </form>
-  </div>
+  </div>  
   <!-- Votre script existant -->
-  <script type="module" src="inscription.js"></script>
+  <script src="connexion.js" type="module"></script>
 </body>
 </html>
