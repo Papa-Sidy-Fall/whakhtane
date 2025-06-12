@@ -1,7 +1,7 @@
 import './index.css'
 // Remplacez par votre URL Render une fois déployé
 const API_BASE = process.env.NODE_ENV === 'production' 
-    ? 'https://json-vgu2.onrender.com' 
+    ? 'https://json-1gkz.onrender.com'
     : 'http://localhost:3000';
 
 // Fonctions API pour les utilisateurs
