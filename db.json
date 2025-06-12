@@ -1,16 +1,81 @@
 {
-  "utilisateurs": [
+  "users": [
     {
-      "id": "3eb0",
-      "prenom": "sidy",
-      "nom": "fall",
-      "telephone": "775943708"
+      "id": "1",
+      "firstname": "Jean",
+      "lastname": "Dupont",
+      "phone": "0123456789",
+      "contacts": [
+        "2"
+      ],
+      "createdAt": "2024-01-01T10:00:00.000Z"
     },
     {
-      "id": "fd77",
-      "prenom": "fatou",
-      "nom": "kassé",
-      "telephone": "77123456"
+      "id": "2",
+      "firstname": "Marie",
+      "lastname": "Martin",
+      "phone": "0987654321",
+      "contacts": [
+        "1"
+      ],
+      "createdAt": "2024-01-01T11:00:00.000Z"
+    },
+    {
+      "id": "1749700167332",
+      "firstname": "sidy",
+      "lastname": "fall",
+      "phone": "775943708",
+      "contacts": [
+        "1749700232063"
+      ],
+      "createdAt": "2025-06-12T03:49:27.332Z"
+    },
+    {
+      "id": "1749700232063",
+      "firstname": "papa",
+      "lastname": "fall",
+      "phone": "771414405",
+      "contacts": [
+        "1749700167332"
+      ],
+      "createdAt": "2025-06-12T03:50:32.063Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "1",
+      "senderId": "1",
+      "receiverId": "2",
+      "content": "Salut Marie ! Comment ça va ?",
+      "timestamp": "2024-01-01T12:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "senderId": "2",
+      "receiverId": "1",
+      "content": "Salut Jean ! Ça va bien merci, et toi ?",
+      "timestamp": "2024-01-01T12:01:00.000Z"
+    },
+    {
+      "id": "3",
+      "senderId": "1",
+      "receiverId": "2",
+      "content": "Très bien aussi ! Tu es libre ce soir ?",
+      "timestamp": "2024-01-01T12:02:00.000Z"
+    },
+    {
+      "id": "1749700306889",
+      "senderId": "1749700232063",
+      "receiverId": "1749700167332",
+      "content": "bonjour sidy fall",
+      "timestamp": "2025-06-12T03:51:46.889Z"
+    },
+    {
+      "id": "1749700371507",
+      "senderId": "1749700167332",
+      "receiverId": "1749700232063",
+      "content": "bonjour",
+      "timestamp": "2025-06-12T03:52:51.507Z"
     }
   ]
 }
