@@ -76,6 +76,13 @@
       "receiverId": "1749700232063",
       "content": "bonjour",
       "timestamp": "2025-06-12T03:52:51.507Z"
+    },
+    {
+      "id": "1749707563937",
+      "senderId": "1749700167332",
+      "receiverId": "1749700232063",
+      "content": "nice",
+      "timestamp": "2025-06-12T05:52:43.937Z"
     }
   ]
 }
