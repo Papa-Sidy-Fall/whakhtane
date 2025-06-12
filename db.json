@@ -83,6 +83,20 @@
       "receiverId": "1749700232063",
       "content": "nice",
       "timestamp": "2025-06-12T05:52:43.937Z"
+    },
+    {
+      "id": "1749710798914",
+      "senderId": "1749700167332",
+      "receiverId": "1749700232063",
+      "content": "merci",
+      "timestamp": "2025-06-12T06:46:38.914Z"
+    },
+    {
+      "id": "1749710893318",
+      "senderId": "1749700167332",
+      "receiverId": "1749700232063",
+      "content": "d'accord",
+      "timestamp": "2025-06-12T06:48:13.318Z"
     }
   ]
 }
