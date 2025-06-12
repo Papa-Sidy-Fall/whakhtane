@@ -115,19 +115,16 @@ async function sendMessage(messageData) {
 async function getMessages(userId, contactId) {
     try {
         const response = await fetch(
-            `${API_BASE}/messages?` +
-            `_sort=timestamp&_order=asc&` +
-            `(senderId=${userId}&receiverId=${contactId}|senderId=${contactId}&receiverId=${userId})`
+            `${API_BASE}/messages?_sort=timestamp&_order=asc`
         );
-        
         let messages = await response.json();
-        
-        // Filtrer manuellement car json-server ne supporte pas les OR complexes
-        messages = messages.filter(msg => 
+
+        // Filtrer les messages entre userId et contactId
+        messages = messages.filter(msg =>
             (msg.senderId === userId && msg.receiverId === contactId) ||
             (msg.senderId === contactId && msg.receiverId === userId)
         );
-        
+
         return messages;
     } catch (error) {
         throw new Error('Erreur lors du chargement des messages');
