@@ -319,6 +319,31 @@ function setupEventListeners() {
         reader.readAsDataURL(file);
         imageInput.value = ""; // reset input
     });
+    
+    const videoInput = document.getElementById('video-input');
+    const videoBtn = document.getElementById('video-btn');
+
+    videoBtn.addEventListener('click', () => {
+        videoInput.click();
+    });
+
+    videoInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            await sendMessage({
+                senderId: currentUser.id,
+                receiverId: currentContact.id,
+                content: "",
+                video: reader.result, // base64 de la vidéo
+                timestamp: new Date().toISOString()
+            });
+            loadMessages();
+        };
+        reader.readAsDataURL(file);
+        videoInput.value = ""; // reset input
+    });
 }
 
 function switchAuthTab(tab) {
@@ -707,6 +732,15 @@ function createMessageElement(message, currentUserId) {
         imgElem.style.maxWidth = "200px";
         imgElem.style.borderRadius = "8px";
         messageDiv.appendChild(imgElem);
+    }
+
+    if (message.video) {
+        const videoElem = document.createElement('video');
+        videoElem.src = message.video;
+        videoElem.controls = true;
+        videoElem.style.maxWidth = "250px";
+        videoElem.style.borderRadius = "8px";
+        messageDiv.appendChild(videoElem);
     }
 
     return messageDiv;
