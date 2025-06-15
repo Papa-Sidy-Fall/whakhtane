@@ -218,7 +218,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #0b141a;
-    width: 1220px;
+    width:1210px;
 }
 
 .chat-header {
@@ -255,12 +255,14 @@ body {
     background-color: #005c4b;
     margin-left: auto;
     border-bottom-right-radius: 4px;
+    width: 30%;
 }
 
 .message.received {
     background-color: #202c33;
     margin-right: auto;
     border-bottom-left-radius: 4px;
+    width: 30%;
 }
 
 .message-time {
