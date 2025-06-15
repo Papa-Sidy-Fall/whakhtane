@@ -294,6 +294,31 @@ function setupEventListeners() {
             });
         }
     });
+    
+    const imageInput = document.getElementById('image-input');
+    const imageBtn = document.getElementById('image-btn');
+
+    imageBtn.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            await sendMessage({
+                senderId: currentUser.id,
+                receiverId: currentContact.id,
+                content: "",
+                image: reader.result, // base64 de l'image
+                timestamp: new Date().toISOString()
+            });
+            loadMessages();
+        };
+        reader.readAsDataURL(file);
+        imageInput.value = ""; // reset input
+    });
 }
 
 function switchAuthTab(tab) {
@@ -673,6 +698,15 @@ function createMessageElement(message, currentUserId) {
             <div class="message-content">${message.content}</div>
             <div class="message-time">${formatTime(new Date(message.timestamp))}</div>
         `;
+    }
+
+    if (message.image) {
+        const imgElem = document.createElement('img');
+        imgElem.src = message.image;
+        imgElem.alt = "Image envoyée";
+        imgElem.style.maxWidth = "200px";
+        imgElem.style.borderRadius = "8px";
+        messageDiv.appendChild(imgElem);
     }
 
     return messageDiv;
