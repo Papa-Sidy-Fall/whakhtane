@@ -156,6 +156,9 @@ let currentUser = null;
 let currentContact = null;
 let contacts = [];
 let messageRefreshInterval = null;
+let mediaRecorder;
+let audioChunks = [];
+let stream = null;
 
 // Initialisation de l'application
 document.addEventListener('DOMContentLoaded', function() {
@@ -206,6 +209,140 @@ function setupEventListeners() {
         if (e.key === 'Enter') {
             handleSendMessage();
         }
+    });
+    
+    const recordBtn = document.getElementById('record-btn');
+    let isRecording = false;
+
+    recordBtn.addEventListener('click', async () => {
+        if (!isRecording) {
+            // Démarrer l'enregistrement
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                let options = { mimeType: 'audio/wav' };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options = { mimeType: 'audio/webm;codecs=opus' };
+                }
+                mediaRecorder = new MediaRecorder(stream, options);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = async () => {
+                    if (audioChunks.length === 0) return;
+                    const audioBlob = new Blob(audioChunks, { type: options.mimeType });
+                    const reader = new FileReader();
+                    reader.onloadend = async () => {
+                        const base64Audio = reader.result;
+                        await sendMessage({
+                            senderId: currentUser.id,
+                            receiverId: currentContact.id,
+                            content: "",
+                            audio: base64Audio,
+                            timestamp: new Date().toISOString()
+                        });
+                        loadMessages();
+                    };
+                    reader.readAsDataURL(audioBlob);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                mediaRecorder.start();
+                recordBtn.textContent = '⏹️';
+                isRecording = true;
+            } catch (err) {
+                showNotification('Erreur accès micro ou enregistrement', 'error');
+            }
+        } else {
+            // Arrêter l'enregistrement
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                recordBtn.textContent = '🎤';
+                isRecording = false;
+            }
+        }
+    });
+    
+    let recorder;
+    let audioStream;
+
+    recordBtn.addEventListener('click', async () => {
+        if (!isRecording) {
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const input = audioContext.createMediaStreamSource(audioStream);
+            recorder = new Recorder(input, { numChannels: 1 });
+            recorder.record();
+            recordBtn.textContent = '⏹️';
+            isRecording = true;
+        } else {
+            recorder.stop();
+            recordBtn.textContent = '🎤';
+            isRecording = false;
+            recorder.exportWAV(async (blob) => {
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result;
+                    await sendMessage({
+                        senderId: currentUser.id,
+                        receiverId: currentContact.id,
+                        content: "",
+                        audio: base64Audio,
+                        timestamp: new Date().toISOString()
+                    });
+                    loadMessages();
+                };
+                reader.readAsDataURL(blob);
+                audioStream.getTracks().forEach(track => track.stop());
+            });
+        }
+    });
+    
+    const imageInput = document.getElementById('image-input');
+    const imageBtn = document.getElementById('image-btn');
+
+    imageBtn.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            await sendMessage({
+                senderId: currentUser.id,
+                receiverId: currentContact.id,
+                content: "",
+                image: reader.result, // base64 de l'image
+                timestamp: new Date().toISOString()
+            });
+            loadMessages();
+        };
+        reader.readAsDataURL(file);
+        imageInput.value = ""; // reset input
+    });
+    
+    const videoInput = document.getElementById('video-input');
+    const videoBtn = document.getElementById('video-btn');
+
+    videoBtn.addEventListener('click', () => {
+        videoInput.click();
+    });
+
+    videoInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            await sendMessage({
+                senderId: currentUser.id,
+                receiverId: currentContact.id,
+                content: "",
+                video: reader.result, // base64 de la vidéo
+                timestamp: new Date().toISOString()
+            });
+            loadMessages();
+        };
+        reader.readAsDataURL(file);
+        videoInput.value = ""; // reset input
     });
 }
 
@@ -545,13 +682,67 @@ function updateContactsList(contacts) {
 function createMessageElement(message, currentUserId) {
     const messageDiv = document.createElement('div');
     const isSent = message.senderId === currentUserId;
-    
     messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-    messageDiv.innerHTML = `
-        <div class="message-content">${message.content}</div>
-        <div class="message-time">${formatTime(new Date(message.timestamp))}</div>
-    `;
-    
+
+    if (message.audio) {
+        const audioElem = document.createElement('audio');
+        audioElem.controls = true;
+
+        // Utilise le base64 pour créer un blob WAV
+        function base64ToBlob(base64, mime) {
+            const byteString = atob(base64.split(',')[1]);
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mime });
+        }
+        // Ici, type WAV car tu utilises Recorder.js
+        const blob = base64ToBlob(message.audio, 'audio/wav');
+        audioElem.src = URL.createObjectURL(blob);
+
+        audioElem.onerror = () => {
+            audioElem.replaceWith('Audio non lisible');
+        };
+        messageDiv.appendChild(audioElem);
+
+        // Après avoir créé le blob dans createMessageElement
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = '⬇️';
+        downloadBtn.onclick = () => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vocal.wav';
+            a.click();
+        };
+        messageDiv.appendChild(downloadBtn);
+    } else {
+        messageDiv.innerHTML = `
+            <div class="message-content">${message.content}</div>
+            <div class="message-time">${formatTime(new Date(message.timestamp))}</div>
+        `;
+    }
+
+    if (message.image) {
+        const imgElem = document.createElement('img');
+        imgElem.src = message.image;
+        imgElem.alt = "Image envoyée";
+        imgElem.style.maxWidth = "200px";
+        imgElem.style.borderRadius = "8px";
+        messageDiv.appendChild(imgElem);
+    }
+
+    if (message.video) {
+        const videoElem = document.createElement('video');
+        videoElem.src = message.video;
+        videoElem.controls = true;
+        videoElem.style.maxWidth = "250px";
+        videoElem.style.borderRadius = "8px";
+        messageDiv.appendChild(videoElem);
+    }
+
     return messageDiv;
 }
 

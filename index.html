@@ -58,13 +58,14 @@
                     </div>
                     <div class="header-actions">
                         <button id="add-contact-btn" class="icon-btn"><i class="fa-solid fa-user-plus"></i></button>
+                        <button id="add-group-btn" class="icon-btn"><i class="fa-solid fa-users"></i></button>
                         <button id="logout-btn" class="icon-btn">Déconnexion</button>
                     </div>
                 </div>
                 
-                <div class="contacts-list" id="contacts-list">
-                    <!-- Les contacts seront ajoutés ici -->
-                </div>
+                <div class="contacts-list" id="contacts-list"></div>
+                <div style="color:#8696a0; padding:10px 15px 0 15px; font-size:13px;">Groupes</div>
+                <div id="groups-list"></div>
             </div>
 
             <!-- Zone de chat -->
@@ -111,6 +112,25 @@
         </div>
     </div>
 
+    <!-- Modal pour créer un groupe -->
+    <div id="add-group-modal" class="modal">
+      <div class="modal-content">
+        <h3>Créer un groupe</h3>
+        <form id="add-group-form">
+          <div class="form-group">
+            <input type="text" id="group-name" placeholder="Nom du groupe" required>
+          </div>
+          <div class="form-group" id="group-members-list">
+            <!-- Ici, tu affiches la liste des contacts à cocher -->
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="cancel-group">Annuler</button>
+            <button type="submit">Créer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Notifications -->
     <div id="notification-container"></div>
 
@@ -118,5 +138,8 @@
     <script type="module" src="api.js"></script>
     <script type="module" src="ui.js"></script>
     <script type="module" src="app.js"></script> -->
+    <script>
+      let currentGroup = null;
+    </script>
   </body>
 </html>

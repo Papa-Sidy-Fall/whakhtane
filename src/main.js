@@ -112,6 +112,20 @@ async function sendMessage(messageData) {
     }
 }
 
+async function sendGroupMessage(messageData) {
+    const response = await fetch(`${API_BASE}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            ...messageData,
+            id: Date.now().toString(),
+            timestamp: new Date().toISOString()
+        })
+    });
+    if (!response.ok) throw new Error('Erreur envoi message groupe');
+    return await response.json();
+}
+
 async function getMessages(userId, contactId) {
     try {
         const response = await fetch(
@@ -151,9 +165,16 @@ async function getAllMessagesForUser(userId) {
         throw new Error('Erreur lors du chargement des messages');
     }
 }
+
+async function loadGroupMessages(groupId) {
+    const response = await fetch(`${API_BASE}/messages?groupId=${groupId}&_sort=timestamp&_order=asc`);
+    return await response.json();
+}
+
 // Variables globales
 let currentUser = null;
 let currentContact = null;
+let currentGroup = null;
 let contacts = [];
 let messageRefreshInterval = null;
 let mediaRecorder;
@@ -194,6 +215,10 @@ function setupEventListeners() {
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
     document.getElementById('add-contact-btn').addEventListener('click', () => {
         showModal('add-contact-modal');
+    });
+    document.getElementById('add-group-btn').addEventListener('click', () => {
+        showGroupMembersList();
+        showModal('add-group-modal');
     });
     
     // Modal de contact
@@ -344,6 +369,32 @@ function setupEventListeners() {
         reader.readAsDataURL(file);
         videoInput.value = ""; // reset input
     });
+    
+    document.getElementById('add-group-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('group-name').value.trim();
+        const checked = Array.from(document.querySelectorAll('#group-members-list input[type="checkbox"]:checked'));
+        const memberIds = checked.map(cb => cb.value);
+        // Ajoute l'utilisateur courant comme membre
+        if (!memberIds.includes(currentUser.id)) memberIds.push(currentUser.id);
+
+        if (!name || memberIds.length < 2) {
+            showNotification('Nom du groupe et au moins 2 membres requis', 'error');
+            return;
+        }
+        try {
+            await createGroup(name, memberIds);
+            hideModal('add-group-modal');
+            showNotification('Groupe créé !');
+            // Recharge la liste des groupes ici
+            await afficherGroupesDansSidebar();
+        } catch (err) {
+            showNotification('Erreur lors de la création du groupe', 'error');
+        }
+    });
+    document.getElementById('cancel-group').addEventListener('click', () => {
+        hideModal('add-group-modal');
+    });
 }
 
 function switchAuthTab(tab) {
@@ -380,9 +431,7 @@ async function handleLogin(e) {
     
     try {
         const user = await loginUser(phone);
-        currentUser = user;
-        // Pas de localStorage pour éviter les conflits entre navigateurs
-        showNotification('Connexion réussie !');
+        currentUser = user; // après login
         showMainInterface();
     } catch (error) {
         displayErrors([error.message], 'login-errors');
@@ -425,6 +474,7 @@ function handleLogout() {
     // Pas de localStorage à supprimer
     currentUser = null;
     currentContact = null;
+    currentGroup = null;
     contacts = [];
     
     if (messageRefreshInterval) {
@@ -440,6 +490,7 @@ async function showMainInterface() {
     updateUserInfo(currentUser);
     showScreen('main-screen');
     await loadContacts();
+    await afficherGroupesDansSidebar();
     startMessageRefresh();
 }
 
@@ -557,11 +608,21 @@ async function loadMessages() {
 }
 
 async function handleSendMessage() {
-    if (!currentContact) return;
-    
     const messageInput = document.getElementById('message-input');
     const content = sanitizeInput(messageInput.value);
-    
+
+    if (currentGroup) {
+        // Envoi message de groupe
+        await sendGroupMessage({
+            senderId: currentUser.id,
+            groupId: currentGroup.id,
+            content
+        });
+        messageInput.value = '';
+        await afficherMessagesGroupe(currentGroup.id);
+        await afficherGroupesDansSidebar();
+        return;
+    }
     const errors = validateMessage(content);
     if (errors.length > 0) {
         showNotification(errors[0], 'error');
@@ -590,11 +651,13 @@ function startMessageRefresh() {
     }
     
     messageRefreshInterval = setInterval(async () => {
+        if (!currentUser) return; // AJOUTE CETTE LIGNE !
         if (currentContact) {
             await loadMessages();
         }
         await loadContacts();
-    }, 3000); // Rafraîchir toutes les 3 secondes
+        await afficherGroupesDansSidebar();
+    }, 3000);
 }
 // Fonctions d'interface utilisateur
 function showScreen(screenId) {
@@ -792,6 +855,23 @@ function updateChatHeader(contact) {
     }
 }
 
+function updateGroupHeader(group) {
+    const chatHeader = document.getElementById('chat-header');
+    chatHeader.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="contact-avatar" style="width: 40px; height: 40px; background:#00a884;">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+                <h4>${group.name}</h4>
+                <p style="font-size: 13px; color: #8696a0; font-weight: normal;">
+                    Groupe (${group.members.length} membres)
+                </p>
+            </div>
+        </div>
+    `;
+}
+
 function setActiveContact(contactId) {
     document.querySelectorAll('.contact-item').forEach(item => {
         item.classList.remove('active');
@@ -800,6 +880,17 @@ function setActiveContact(contactId) {
     const activeContact = document.querySelector(`[data-contact-id="${contactId}"]`);
     if (activeContact) {
         activeContact.classList.add('active');
+    }
+}
+
+function setActiveGroup(groupId) {
+    document.querySelectorAll('.group-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeGroup = Array.from(document.querySelectorAll('.group-item'))
+        .find(item => item.textContent === groupId || item.dataset.groupId === groupId);
+    if (activeGroup) {
+        activeGroup.classList.add('active');
     }
 }
 
@@ -921,3 +1012,81 @@ function clearErrors(containerId) {
 function sanitizeInput(input) {
     return input.trim().replace(/[<>]/g, '');
 }
+
+async function createGroup(name, memberIds) {
+    const response = await fetch(`${API_BASE}/groups`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id: Date.now().toString(),
+            name,
+            members: memberIds,
+            createdAt: new Date().toISOString()
+        })
+    });
+    if (!response.ok) throw new Error('Erreur création groupe');
+    return await response.json();
+}
+
+async function updateGroupMembers(groupId, members) {
+    const response = await fetch(`${API_BASE}/groups/${groupId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ members })
+    });
+    if (!response.ok) throw new Error('Erreur mise à jour membres');
+    return await response.json();
+}
+
+async function loadGroups() {
+    const response = await fetch(`${API_BASE}/groups`);
+    const allGroups = await response.json();
+    // Filtrer les groupes où currentUser est membre (force en string)
+    return allGroups.filter(g => g.members.includes(String(currentUser.id)));
+}
+
+async function afficherGroupesDansSidebar() {
+    if (!currentUser) return;
+    const groups = await loadGroups();
+    const groupsList = document.getElementById('groups-list');
+    groupsList.innerHTML = '';
+    groups.forEach(group => {
+        const div = document.createElement('div');
+        div.className = 'group-item';
+        div.textContent = group.name;
+        div.dataset.groupId = group.id;
+        div.onclick = async () => {
+            currentContact = null;
+            currentGroup = group;
+            setActiveGroup(group.id);
+            await afficherMessagesGroupe(group.id);
+            updateGroupHeader(group); // <-- AJOUTE CETTE LIGNE
+            document.getElementById('message-input-container').style.display = 'block'; // <-- AJOUTE CETTE LIGNE
+        };
+        groupsList.appendChild(div);
+    });
+    console.log('Groupes trouvés pour cet utilisateur :', groups);
+}
+
+async function afficherMessagesGroupe(groupId) {
+    const messages = await loadGroupMessages(groupId);
+    updateMessagesContainer(messages, currentUser.id);
+    // Mets à jour le header, etc.
+}
+
+function showGroupMembersList() {
+    const container = document.getElementById('group-members-list');
+    container.innerHTML = '';
+    contacts.forEach(contact => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <label>
+                <input type="checkbox" value="${contact.id}">
+                ${contact.firstname} ${contact.lastname}
+            </label>
+        `;
+        container.appendChild(div);
+    });
+}
+
+console.log('currentUser.id', currentUser.id, typeof currentUser.id);

@@ -6,7 +6,8 @@
       "lastname": "fall",
       "phone": "775943708",
       "contacts": [
-        "1750026670833"
+        "1750026670833",
+        "1750172565722"
       ],
       "createdAt": "2025-06-15T22:30:57.268Z"
     },
@@ -17,15 +18,68 @@
       "phone": "771414405",
       "contacts": [],
       "createdAt": "2025-06-15T22:31:10.833Z"
+    },
+    {
+      "id": "1750172565722",
+      "firstname": "Absa",
+      "lastname": "Fall",
+      "phone": "776125303",
+      "contacts": [
+        "1750026657268"
+      ],
+      "createdAt": "2025-06-17T15:02:45.722Z"
     }
   ],
   "messages": [
     {
-      "id": "1750030449902",
+      "id": "msgid",
+      "senderId": "userId",
+      "groupId": "groupId",
+      "content": "texte",
+      "image": "...",
+      "audio": "...",
+      "video": "...",
+      "timestamp": "..."
+    },
+    {
+      "id": "1750174451614",
       "senderId": "1750026657268",
       "receiverId": "1750026670833",
       "content": "merci",
-      "timestamp": "2025-06-15T23:34:09.902Z"
+      "timestamp": "2025-06-17T15:34:11.614Z"
+    },
+    {
+      "id": "1750176484587",
+      "senderId": "1750026657268",
+      "groupId": "1750176238164",
+      "content": "merci",
+      "timestamp": "2025-06-17T16:08:04.587Z"
+    },
+    {
+      "id": "1750176494235",
+      "senderId": "1750026657268",
+      "groupId": "1750176238164",
+      "content": "cool",
+      "timestamp": "2025-06-17T16:08:14.235Z"
+    },
+    {
+      "id": "1750176925825",
+      "senderId": "1750172565722",
+      "groupId": "1750176238164",
+      "content": "ça marche tkt tkt tkt",
+      "timestamp": "2025-06-17T16:15:25.825Z"
+    }
+  ],
+  "groups": [
+    {
+      "id": "1750176238164",
+      "name": "fifa",
+      "members": [
+        "1750026670833",
+        "1750172565722",
+        "1750026657268"
+      ],
+      "createdAt": "2025-06-17T16:03:58.164Z"
     }
   ]
 }

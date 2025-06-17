@@ -169,7 +169,7 @@ body {
 
 .contacts-list {
     overflow-y: auto;
-    height: calc(100vh - 70px);
+    max-height: 40vh;
 }
 
 .contact-item {
@@ -437,4 +437,28 @@ body {
     top: 20px;
     right: 20px;
     z-index: 1001;
+}
+
+#groups-list {
+    margin-top: 10px;
+    /* Pour séparer des contacts */
+    overflow-y: auto;
+    max-height: 30vh;
+}
+
+.group-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #2a3942;
+    color: #e9edef;
+    background-color: #111b21;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.group-item:hover,
+.group-item.active {
+    background-color: #2a3942;
 }
